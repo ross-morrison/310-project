@@ -35,7 +35,7 @@ target/
 .settings/
 .classpath
 .project
-.metadata/
+java-chatbot/.metadata/
 
 # NetBeans specific
 nbproject/private/
@@ -63,3 +63,5 @@ java-chatbot/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/4260330844.index
 java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/savedIndexNames.txt
 java-chatbot/.metadata/version.ini
+java-chatbot/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.projects/java-chatbot/org.eclipse.jdt.core/state.dat

@@ -44,6 +44,8 @@ public class ChatbotMain {
 		
 		System.out.println("*${dog-name} closes its eyes in disgust*");
 		
+		System.out.println("Change");
+		
 	}
 
 }
