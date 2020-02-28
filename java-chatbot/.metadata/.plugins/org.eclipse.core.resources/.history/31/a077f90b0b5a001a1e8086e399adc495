@@ -1,0 +1,45 @@
+package ca.ubco.cosc310;
+
+import java.util.ArrayList;
+
+public class ChatbotMain {
+	
+	private ArrayList<String> greetings;
+	private ArrayList<String> goodbyes;
+
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+		
+	}
+	
+	
+
+	/**
+	 * @return the greetings array
+	 */
+	public ArrayList<String> getGreetings() {
+		return greetings;
+	}
+
+	/**
+	 * @param greet the greetings to set
+	 */
+	public void setGreetings(ArrayList<String> greet) {
+		this.greetings = greet;
+	}
+
+	/**
+	 * @return the goodbyes
+	 */
+	public ArrayList<String> getGoodbyes() {
+		return goodbyes;
+	}
+
+	/**
+	 * @param byes the goodbyes to set
+	 */
+	public void setGoodbyes(ArrayList<String> byes) {
+		this.goodbyes = byes;
+	}
+
+}

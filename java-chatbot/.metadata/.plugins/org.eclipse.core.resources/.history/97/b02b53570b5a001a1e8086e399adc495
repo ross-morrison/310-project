@@ -1,0 +1,59 @@
+package ca.ubco.cosc310;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class ChatbotMain {
+	
+	private ArrayList<String> greetings;
+	private ArrayList<String> goodbyes;
+	private HashMap<String, String> inputs;
+
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+		
+	}
+
+	/**
+	 * @return the greetings array
+	 */
+	public ArrayList<String> getGreetings() {
+		return greetings;
+	}
+
+	/**
+	 * @param greet the greetings to set
+	 */
+	public void setGreetings(ArrayList<String> greet) {
+		this.greetings = greet;
+	}
+
+	/**
+	 * @return the goodbyes
+	 */
+	public ArrayList<String> getGoodbyes() {
+		return goodbyes;
+	}
+
+	/**
+	 * @param byes the goodbyes to set
+	 */
+	public void setGoodbyes(ArrayList<String> byes) {
+		this.goodbyes = byes;
+	}
+
+	/**
+	 * @return the inputs
+	 */
+	public HashMap<String, String> getInputs() {
+		return inputs;
+	}
+
+	/**
+	 * @param inputs the inputs to set
+	 */
+	public void setInputs(HashMap<String, String> input) {
+		this.inputs = input;
+	}
+
+}

@@ -1,0 +1,18 @@
+INDEX VERSION 1.131+C:\GTA\java-chatbot-v0.1\.metadata\.plugins\org.eclipse.jdt.core
+581320265.index
+394837786.index
+908842799.index
+4107518433.index
+3389509961.index
+4074121104.index
+4123117720.index
+849720727.index
+3555728116.index
+3419115394.index
+2767501072.index
+2273145969.index
+407503541.index
+591788083.index
+2063778153.index
+1123824540.index
+4260330844.index

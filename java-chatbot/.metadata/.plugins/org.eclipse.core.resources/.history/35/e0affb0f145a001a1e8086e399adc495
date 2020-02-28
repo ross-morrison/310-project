@@ -1,0 +1,31 @@
+package ca.ubco.cosc310;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+/*
+ * Created 2/25/2020
+ * @authors Ross Morrison, Brandon Gaucher, Eric Shanks, Ben Fitzharris 
+ */
+public class ChatbotMain {
+	
+	/*
+	 * Greetings are used when the user 
+	 */
+	public ArrayList<String> greetings;
+	public ArrayList<String> random;
+	public ArrayList<String> actions;
+	public ArrayList<String> goodbyes;
+	public HashMap<String, String> inputs;
+
+	public static void main(String[] args) {
+		System.out.println("Enter your dogs name: ");
+		
+		System.out.println("That's a great name! ${dog-name}");
+		
+		System.out.println("*${dog-name} sniffs you*");
+		
+	}
+
+}

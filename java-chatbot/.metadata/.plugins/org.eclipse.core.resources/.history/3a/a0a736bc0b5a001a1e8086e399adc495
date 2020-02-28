@@ -1,0 +1,17 @@
+package ca.ubco.cosc310;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class ChatbotMain {
+	
+	public ArrayList<String> greetings;
+	public ArrayList<String> goodbyes;
+	public HashMap<String, String> inputs;
+
+	public static void main(String[] args) {
+		System.out.println("Hello World");
+		
+	}
+
+}
