@@ -1,0 +1,17 @@
+{
+    "Inputs:Greetings": [
+        "Hello",
+        "Woof Woof",
+        "Bark"
+    ],
+	"Inputs:Goodbyes": [
+        "Hello",
+        "Woof Woof",
+        "Bark"
+    ],
+	"Inputs:Actions": [
+        "Hello",
+        "Woof Woof",
+        "Bark"
+    ]
+}
