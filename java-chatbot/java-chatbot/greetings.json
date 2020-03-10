@@ -1,7 +1,9 @@
 {
     "Greetings": [
         "Hello",
+        "Hello, who are you?",
         "Woof Woof",
-        "Bark"
+        "Bark",
+	"Hi, nice to meet you, what is your name?",
     ]
 }
