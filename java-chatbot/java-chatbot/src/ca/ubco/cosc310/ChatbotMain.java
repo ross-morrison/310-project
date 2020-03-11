@@ -17,114 +17,98 @@ import org.json.simple.parser.JSONParser;
  * @authors Ross Morrison, Brandon Gaucher, Eric Shanks, Ben Fitzharris 
  */
 public class ChatbotMain {
-	
+
 	/*
 	 * Responses are used when the user inputs something like hey/hello
 	 */
 	public static ArrayList<String> greetings;
-	
+
 	/*
 	 * Random events that can happen ie. chase squirrel
 	 */
 	public static ArrayList<String> random;
-	
+
 	/*
 	 * Responses to actions from user. ie. *throws ball*
 	 */
 	public static ArrayList<String> actions;
-	
+
 	/*
 	 * Responses are used when the user inputs something like bye/goodbye
 	 */
 	public static ArrayList<String> goodbyes;
-	
+
 	/*
-	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked to the actions list and looks for one with "ball" in it
+	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
+	 * to the actions list and looks for one with "ball" in it
 	 */
 	public static HashMap<String, String> inputs;
 
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		
-		greetings = new ArrayList<String>();
+
 		random = new ArrayList<String>();
 		actions = new ArrayList<String>();
 		goodbyes = new ArrayList<String>();
 		inputs = new HashMap<String, String>();
-		
-		//Load arrays from files
-		//https://crunchify.com/how-to-read-json-object-from-file-in-java/
+
+		// Load arrays from files
+		greetings = loadJson("greetings", "Greetings");
+		random = loadJson("random", "Random");
+		actions = loadJson("actions", "Actions");
+		goodbyes = loadJson("goodbyes", "Goodbyes");
+		inputs = loadInputs("inputs");
+
+
+		// Prompt user input
+		for (String greeting : greetings) {
+			System.out.println(greeting);
+		}
+
+		// Loop until user says goodbye, then send goodbye message
+
+	}
+
+	// https://crunchify.com/how-to-read-json-object-from-file-in-java/
+	public static ArrayList<String> loadJson(String filename, String section) {
+		ArrayList<String> tempArray = new ArrayList<String>();
 		JSONParser parser = new JSONParser();
 		try {
-			Object fileObject = parser.parse(new FileReader("./greetings.json"));
-			JSONObject greetingsObject = (JSONObject) fileObject;
-			JSONArray greetingsList = (JSONArray) greetingsObject.get("Greetings");
-			
-			Iterator<String> iterator = greetingsList.iterator();
-			while (iterator.hasNext()) {
-				greetings.add(iterator.next());
+			Object fileObject = parser.parse(new FileReader("./" + filename + ".json"));
+			JSONObject jsonObject = (JSONObject) fileObject;
+			JSONArray jsonArray = (JSONArray) jsonObject.get(section);
+			if (jsonArray != null) {
+				for (int i = 0; i < jsonArray.size(); i++) {
+					tempArray.add(jsonArray.get(i).toString());
+				}
 			}
-			
-			fileObject = parser.parse(new FileReader("./random.json"));
-			JSONObject randomObject = (JSONObject) fileObject;
-			JSONArray randomList = (JSONArray) randomObject.get("Random");
-			
-			iterator = randomList.iterator();
-			while (iterator.hasNext()) {
-				random.add(iterator.next());
-			}
-			
-			fileObject = parser.parse(new FileReader("./actions.json"));
-			JSONObject actionsObject = (JSONObject) fileObject;
-			JSONArray actionsList = (JSONArray) actionsObject.get("Actions");
-			
-			iterator = actionsList.iterator();
-			while (iterator.hasNext()) {
-				actions.add(iterator.next());
-			}
-			
-			fileObject = parser.parse(new FileReader("./goodbyes.json"));
-			JSONObject goodbyesObject = (JSONObject) fileObject;
-			JSONArray goodbyesList = (JSONArray) goodbyesObject.get("Goodbyes");
-			
-			iterator = goodbyesList.iterator();
-			while (iterator.hasNext()) {
-				goodbyes.add(iterator.next());
-			}
-			
-			fileObject = parser.parse(new FileReader("./inputs.json"));
-			JSONObject inputsObject = (JSONObject) fileObject;
-			
-			JSONArray inputsGreetingsList = (JSONArray) inputsObject.get("Inputs:Greetings");
-			iterator = inputsGreetingsList.iterator();
-			while (iterator.hasNext()) {
-				inputs.put( iterator.next(), "Greetings");
-			}
-			
-			JSONArray inputsGoodbyesList = (JSONArray) inputsObject.get("Inputs:Goodbyes");
-			iterator = inputsGoodbyesList.iterator();
-			while (iterator.hasNext()) {
-				inputs.put(iterator.next(), "Goodbyes");
-			}
-			
-			JSONArray inputsActionsList = (JSONArray) inputsObject.get("Inputs:Actions");
-			iterator = inputsActionsList.iterator();
-			while (iterator.hasNext()) {
-				inputs.put(iterator.next(), "Actions");
-			}
-			
+			return tempArray;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	public static HashMap<String, String> loadInputs(String filename) {
 		
-		//Prompt user input
-		for(String greeting : greetings) {
-			System.out.println(greeting);
+		HashMap<String,String> tempMap = new HashMap<String, String>();
+		
+		ArrayList<String> greetingsInput = loadJson(filename, "Inputs:Greetings");
+		for(String in : greetingsInput) {
+			tempMap.put(in, "Greetings");
 		}
 		
-		//Loop until user says goodbye, then send goodbye message
+		ArrayList<String> actionsInput = loadJson(filename, "Inputs:Actions");
+		for(String in : actionsInput) {
+			tempMap.put(in, "Actions");
+		}
 		
+		ArrayList<String> goodbyesInput = loadJson(filename, "Inputs:Goodbyes");
+		for(String in : actionsInput) {
+			tempMap.put(in, "Goodbyes");
+		}
 		
+		return tempMap;
+
 	}
 
 }
