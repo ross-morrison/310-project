@@ -1,5 +1,5 @@
 # 310-project
-
+A simple Java chatbot made with JSON-Simple
 # How to compile
 - Import project into eclipse
 - Add JUnit and json-simple to build path
