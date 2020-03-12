@@ -3,8 +3,10 @@ package ca.ubco.cosc310;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,16 +42,26 @@ public class ChatbotMain {
 
 	/*
 	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
-	 * to the actions list and looks for one with "ball" in it
+	 * to the actions list for *runs and grabs ball*
 	 */
 	public static HashMap<String, String> inputs;
+	
+	public static Scanner scanman;
+	
+	public static String dogName = "";
+	public static String personName = "";
 
 	public static void main(String[] args) {
+		
+		//Main scanner input
+		scanman = new Scanner(System.in);
+		
+		Random rand = new Random();
 
 		random = new ArrayList<String>();
 		actions = new ArrayList<String>();
 		goodbyes = new ArrayList<String>();
-		inputs = new HashMap<String, String>();
+		inputs = new LinkedHashMap<String, String>();
 
 		// Load arrays from files
 		greetings = loadJson("greetings", "Greetings");
@@ -58,29 +70,89 @@ public class ChatbotMain {
 		goodbyes = loadJson("goodbyes", "Goodbyes");
 		inputs = loadInputs("inputs");
 
+		
 
-		// Prompt user input
-		for (String greeting : greetings) {
-			System.out.println(greeting);
+		//To loop forever until the user says goodbye
+		boolean running = true;
+		
+		//Initial prompt to start
+		String input = prompt("Try saying hello, or say what your name is!");
+
+		while(running) {
+			//Text to ask in next print
+			String nextText = "";
+			
+			//Hard coded for now but sets dog name and the person name
+			//TODO: Remove special characters
+			if(input.startsWith("My name is")) {
+				personName = input.substring(11,input.length());
+				input = input.substring(0, 10);
+			}else if(input.equalsIgnoreCase("what is your name?")) {
+				dogName = prompt("I don't have one! Please give me one:");
+			}
+			
+			//Lowercase and trim input
+			input = cleanInput(input);
+			
+			//If the input is found
+			if(inputs.get(input) != null) {
+				
+				//Get the group of the input
+				String cat = inputs.get(input);
+				
+				if(cat == "Greetings") {
+					//Get a random greeting
+					nextText = greetings.get(rand.nextInt(greetings.size()));
+				}else if(cat == "Actions") {
+					//Get the matching action
+					nextText = getAction(input);
+				}else if(cat == "Goodbyes") {
+					//Stop the loop
+					running = false;
+					break;
+				}
+			}else if(rand.nextInt(10) > 5) {
+				//Chance of a random enounter
+				nextText = random.get(rand.nextInt(random.size()));
+			}else {
+				//Retry input
+				nextText = "I didn't understand that";
+			}
+			//Re prompt user with the new text
+			input = prompt(nextText);
 		}
-
-		// Loop until user says goodbye, then send goodbye message
-
+		
+		//Get a random goodbye to say
+		print(goodbyes.get(rand.nextInt(goodbyes.size())));
+		
+		//Close the scanner
+		scanman.close();
 	}
 
 	// https://crunchify.com/how-to-read-json-object-from-file-in-java/
+	/*
+	 * Loads the specified JSON file into a temporary array and returns it.
+	 */
 	public static ArrayList<String> loadJson(String filename, String section) {
+		
 		ArrayList<String> tempArray = new ArrayList<String>();
+		
 		JSONParser parser = new JSONParser();
+		
 		try {
+			//Load json file
 			Object fileObject = parser.parse(new FileReader("./" + filename + ".json"));
 			JSONObject jsonObject = (JSONObject) fileObject;
+			//Get the specified section
 			JSONArray jsonArray = (JSONArray) jsonObject.get(section);
+			
+			//Load into array
 			if (jsonArray != null) {
 				for (int i = 0; i < jsonArray.size(); i++) {
 					tempArray.add(jsonArray.get(i).toString());
 				}
 			}
+			
 			return tempArray;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,27 +160,72 @@ public class ChatbotMain {
 		return null;
 	}
 	
+	/*
+	 * Loads the 3 input groups into the HashMap
+	 */
 	public static HashMap<String, String> loadInputs(String filename) {
 		
-		HashMap<String,String> tempMap = new HashMap<String, String>();
+		HashMap<String,String> tempMap = new LinkedHashMap<String, String>();
 		
+		//Load greetings
 		ArrayList<String> greetingsInput = loadJson(filename, "Inputs:Greetings");
 		for(String in : greetingsInput) {
-			tempMap.put(in, "Greetings");
+			tempMap.put(cleanInput(in), "Greetings");
 		}
 		
+		//Load actions
 		ArrayList<String> actionsInput = loadJson(filename, "Inputs:Actions");
 		for(String in : actionsInput) {
-			tempMap.put(in, "Actions");
+			tempMap.put(cleanInput(in), "Actions");
 		}
 		
+		//Load goodbyes
 		ArrayList<String> goodbyesInput = loadJson(filename, "Inputs:Goodbyes");
-		for(String in : actionsInput) {
-			tempMap.put(in, "Goodbyes");
+		for(String in : goodbyesInput) {
+			tempMap.put(cleanInput(in), "Goodbyes");
 		}
 		
 		return tempMap;
-
+	}
+	
+	/*
+	 * Trims and lowercases specified string, also replaces the dogname with ${dog} for calling out the dogs name
+	 */
+	public static String cleanInput(String text) {
+		if(dogName != "") {
+			text = text.replace(dogName, "${dog}");
+		}
+		return text.toLowerCase().trim();
+	}
+	
+	/*
+	 * Prints the specified text then waits for input
+	 */
+	public static String prompt(String text) {
+		print(text);
+		return scanman.nextLine();
+	}
+	
+	/*
+	 * Formats the specified text with the dog name or person name before printing
+	 */
+	public static void print(String text) {
+		if(personName != "") text = text.replace("${person}", personName);
+		if(dogName != "") text = text.replace("${dog}", dogName);
+		if(text != "") System.out.println(text);
+	}
+	
+	/*
+	 * Loops through the actions input list and finds the associated action from actions array
+	 */
+	public static String getAction(String input) {
+		ArrayList<String> actionInputs = new ArrayList<String>();
+		for (Entry<String, String> entry : inputs.entrySet()) {
+			if (entry.getValue().equalsIgnoreCase("actions")) {
+				actionInputs.add(entry.getKey());
+			}
+		}
+		return actions.get(actionInputs.indexOf(input));
 	}
 
 }

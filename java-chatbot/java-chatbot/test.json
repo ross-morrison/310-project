@@ -1,0 +1,14 @@
+{
+    "test": [
+        "tester"
+    ],
+	"Inputs:Greetings": [
+        "testerGreet"
+    ],
+	"Inputs:Actions": [
+        "testerAction"
+    ],
+	"Inputs:Goodbyes": [
+        "testerGoodbye"
+    ]
+}

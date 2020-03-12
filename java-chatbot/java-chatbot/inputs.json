@@ -11,14 +11,13 @@
         "See you later"
     ],
 	"Inputs:Actions": [
-	
         "My name is",
         "What is your name?",
         "What have you been up to today?",
 		"Do you like cats?",
         "Who is your favorite cat?",
         "Come back here!",
-		"Y, come back here!",
+		"${dog}, come back here!",
         "Why do you hate squirrels?",
         "What makes you say that",
 		"Why did they take your ball?",
@@ -43,7 +42,6 @@
 		"Do you want to sleep?",
         "Do you like to sleep?",
         "Are you going to sleep?",
-		"Goodnight",
-        
+		"Goodnight"
     ]
 }

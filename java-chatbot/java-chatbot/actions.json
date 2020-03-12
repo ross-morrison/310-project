@@ -1,15 +1,15 @@
 {
     "Actions": [
-        "Nice to meet you x!",
-        "My name is Y. Ask me what I did today",
+        "Nice to meet you ${person}!",
+        "My name is ${dog}. Ask me what I did today",
         "I have been chasing cats!",
 		"Yes! The cats are always happy to see me",
-        "Catman is my favorite cat, he is so… SQUIRREL! *Y runs off*",
-        "*Y is chasing squirrels. Try calling the dog's name.*",
+        "Catman is my favorite cat, he is so... SQUIRREL! *${dog} runs off*",
+        "*${dog} is chasing squirrels. Try calling the dog's name.*",
 		"Sorry about that, I just hate squirrels so much",
         "Because they are government spies!",
         "They are always hiding secrets and they stole my ball",
-		 "I know too much!... Wanna play ball?",
+		"I know too much!... Wanna play ball?",
         "Awesome! Ask me about my favorite ball!",
         "My favorite kind of ball is a magic 8 ball",
 		"IT SHOWS ME THE SOULS OF HUMANS… want to go for a walk?",
@@ -28,6 +28,5 @@
         "No, I have so much energy… but I want to sleep",
         "Sleeping is the best!",
 		"Yes I am going to sleep now"
-       
     ]
 }
