@@ -69,61 +69,64 @@ public class ChatbotMain {
 		actions = loadJson("actions", "Actions");
 		goodbyes = loadJson("goodbyes", "Goodbyes");
 		inputs = loadInputs("inputs");
-
 		
-
-		//To loop forever until the user says goodbye
-		boolean running = true;
-		
-		//Initial prompt to start
-		String input = prompt("Try saying hello, or say what your name is!");
-
-		while(running) {
-			//Text to ask in next print
-			String nextText = "";
+		String networked = prompt("Use socket? Y / N");
+		if(networked.equalsIgnoreCase("y")) {
 			
-			//Hard coded for now but sets dog name and the person name
-			//TODO: Remove special characters
-			if(input.startsWith("My name is")) {
-				personName = input.substring(11,input.length());
-				input = input.substring(0, 10);
-			}else if(input.equalsIgnoreCase("what is your name?")) {
-				dogName = prompt("I don't have one! Please give me one:");
-			}
+		}else {
+			//To loop forever until the user says goodbye
+			boolean running = true;
 			
-			//Lowercase and trim input
-			input = cleanInput(input);
-			
-			//If the input is found
-			if(inputs.get(input) != null) {
+			//Initial prompt to start
+			String input = prompt("Try saying hello, or say what your name is!");
+	
+			while(running) {
+				//Text to ask in next print
+				String nextText = "";
 				
-				//Get the group of the input
-				String cat = inputs.get(input);
-				
-				if(cat == "Greetings") {
-					//Get a random greeting
-					nextText = greetings.get(rand.nextInt(greetings.size()));
-				}else if(cat == "Actions") {
-					//Get the matching action
-					nextText = getAction(input);
-				}else if(cat == "Goodbyes") {
-					//Stop the loop
-					running = false;
-					break;
+				//Hard coded for now but sets dog name and the person name
+				//TODO: Remove special characters
+				if(input.startsWith("My name is")) {
+					personName = input.substring(11,input.length());
+					input = input.substring(0, 10);
+				}else if(input.equalsIgnoreCase("what is your name?")) {
+					dogName = prompt("I don't have one! Please give me one:");
 				}
-			}else if(rand.nextInt(10) > 5) {
-				//Chance of a random enounter
-				nextText = random.get(rand.nextInt(random.size()));
-			}else {
-				//Retry input
-				nextText = "I didn't understand that";
+				
+				//Lowercase and trim input
+				input = cleanInput(input);
+				
+				//If the input is found
+				if(inputs.get(input) != null) {
+					
+					//Get the group of the input
+					String cat = inputs.get(input);
+					
+					if(cat == "Greetings") {
+						//Get a random greeting
+						nextText = greetings.get(rand.nextInt(greetings.size()));
+					}else if(cat == "Actions") {
+						//Get the matching action
+						nextText = getAction(input);
+					}else if(cat == "Goodbyes") {
+						//Stop the loop
+						running = false;
+						break;
+					}
+				}else if(rand.nextInt(10) > 5) {
+					//Chance of a random enounter
+					nextText = random.get(rand.nextInt(random.size()));
+				}else {
+					//Retry input
+					nextText = "I didn't understand that";
+				}
+				//Re prompt user with the new text
+				input = prompt(nextText);
 			}
-			//Re prompt user with the new text
-			input = prompt(nextText);
+			
+			//Get a random goodbye to say
+			print(goodbyes.get(rand.nextInt(goodbyes.size())));
 		}
-		
-		//Get a random goodbye to say
-		print(goodbyes.get(rand.nextInt(goodbyes.size())));
 		
 		//Close the scanner
 		scanman.close();

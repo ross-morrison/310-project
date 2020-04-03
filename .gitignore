@@ -65,3 +65,25 @@ java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/savedIndexNames.txt
 java-chatbot/.metadata/version.ini
 java-chatbot/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.projects/java-chatbot/org.eclipse.jdt.core/state.dat
+<<<<<<< Updated upstream
+=======
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.projects/java-chatbot/.indexes/e4/5e/b9/56/history.index
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.projects/java-chatbot/.indexes/e4/5e/b9/56/history.index
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
+java-chatbot/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.debug.ui.prefs
+java-chatbot/.metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml
+java-chatbot/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/4260330844.index
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/externalFilesCache
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/nonChainingJarsCache
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/savedIndexNames.txt
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.ui/QualifiedTypeNameHistory.xml
+java-chatbot/.metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log
+java-chatbot/.metadata/version.ini
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.projects/java-chatbot/.indexes/e4/5e/b9/56/history.index
+java-chatbot/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/savedIndexNames.txt
+java-chatbot/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/savedIndexNames.txt
+java-chatbot/.metadata/.plugins/org.eclipse.jdt.core/4260330844.index
+>>>>>>> Stashed changes
