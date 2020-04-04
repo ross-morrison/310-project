@@ -44,7 +44,7 @@ public class ChatbotMain {
 	/*
 	 * This is used to store the input and its associated POS tags
 	 */
-	public static ArrayList<Word> parseInput;
+	public static ArrayList<Word> parsedInput;
 
 	/*
 	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
@@ -71,7 +71,7 @@ public class ChatbotMain {
 		actions = new ArrayList<String>();
 		goodbyes = new ArrayList<String>();
 		inputs = new LinkedHashMap<String, String>();
-		parseInput = new ArrayList<Word>();
+		parsedInput = new ArrayList<Word>();
 
 		// Load arrays from files
 		greetings = loadJson("greetings", "Greetings");
@@ -92,33 +92,20 @@ public class ChatbotMain {
 			//Text to ask in next print
 			String nextText = "";
 			
-			//temp String array
-			String[] tempStringArray = new String[20];
 			
 			//Hard coded for now but sets dog name and the person name
 			//TODO: Remove special characters
 			
-			//parse input using pos
-			taggedInput = posTag.tagTokenizedString(input);
-			
-			System.out.println(taggedInput);
-			
-			tempStringArray = taggedInput.split(" ");
-			
-			//for loop adds the word object to parseinput array from the split string
-			for(String words : tempStringArray) {
-				String[] temp = new String[2];
-				temp = words.split("_");
-				parseInput.add(new Word(temp[0], temp[1]));	
-			}
-			
+			//parse and POS tag input
+			parseInput(input);
 			
 			//Chatbot rules for response
 			
 			if(input.startsWith("My name is")) {
-				if( parseInput.get(3).getIdentifier().equalsIgnoreCase("NNP")) {
-					personName = parseInput.get(3).getContent();
+				while(!NNPCheck(parsedInput.get(3))) {
+					input = prompt("Sorry but I don't think that's a real name, What is your real name? ");
 				}
+				personName = parsedInput.get(3).getContent();
 				//personName = input.substring(11,input.length());
 				input = input.substring(0, 10);
 			}else if(input.equalsIgnoreCase("what is your name?")) {
@@ -156,7 +143,7 @@ public class ChatbotMain {
 			input = prompt(nextText);
 			
 			//empty parseInput to be clear for next input
-			parseInput.clear();
+			parsedInput.clear();
 		}
 		
 		//Get a random goodbye to say
@@ -263,6 +250,38 @@ public class ChatbotMain {
 			}
 		}
 		return actions.get(actionInputs.indexOf(input));
+	}
+	
+	/*
+	 * Method to check if the desired word is a proper noun singular
+	 */
+	public static boolean NNPCheck(Word word) {
+		
+		if(word.getIdentifier().equalsIgnoreCase("NNP"))
+			return true;
+		else {
+			return false;
+		}
+	}
+	
+	/*
+	 * Method parse's input into parseInput
+	 */
+	
+	public static void parseInput(String input) {
+		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
+		
+		String[] tempStringArray = new String[20];
+		
+		taggedInput = posTag.tagTokenizedString(input);
+		
+		tempStringArray = taggedInput.split(" ");
+		
+		for(String words : tempStringArray) {
+			String[] temp = new String[2];
+			temp = words.split("_");
+			parsedInput.add(new Word(temp[0], temp[1]));	
+		}
 	}
 
 }
