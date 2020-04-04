@@ -1,6 +1,7 @@
 package ca.ubco.cosc310;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -72,7 +73,51 @@ public class ChatbotMain {
 		
 		String networked = prompt("Use socket? Y / N");
 		if(networked.equalsIgnoreCase("y")) {
-			
+			String ip = prompt("Enter the ip address");
+			int port = Integer.parseInt(prompt("Enter the port"));
+			try {
+				ChatbotSocket socket = new ChatbotSocket(ip, port);
+				boolean running = true;
+				
+				//initial input from other bot
+				String input = socket.send("Try saying hello, or say what your name is!");
+				
+				while(running) {
+					String nextText = "";
+					
+					//clean input
+					input = cleanInput(input);
+					
+					//If the input is found
+					if(inputs.get(input) != null) {
+						
+						//Get the group of the input
+						String cat = inputs.get(input);
+						
+						if(cat == "Greetings") {
+							//Get a random greeting
+							nextText = greetings.get(rand.nextInt(greetings.size()));
+						}else if(cat == "Actions") {
+							//Get the matching action
+							nextText = getAction(input);
+						}else if(cat == "Goodbyes") {
+							//Stop the loop
+							running = false;
+							break;
+						}
+					}else if(rand.nextInt(10) > 5) {
+						//Chance of a random enounter
+						nextText = random.get(rand.nextInt(random.size()));
+					}else {
+						//Retry input
+						nextText = "I didn't understand that";
+					}
+					//Re prompt other bot with new text
+					input = socket.send(nextText);
+				}
+			}catch (IOException e) {
+				print("Connection was lost or corrupted.");
+			}
 		}else {
 			//To loop forever until the user says goodbye
 			boolean running = true;
