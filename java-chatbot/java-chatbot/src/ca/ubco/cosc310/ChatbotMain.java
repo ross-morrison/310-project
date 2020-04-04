@@ -43,7 +43,7 @@ public class ChatbotMain {
 	public static ArrayList<String> goodbyes;
 	
 	/*
-	 * 
+	 * This is used to store the input and its associated POS tags
 	 */
 	public static ArrayList<Word> parseInput;
 
@@ -63,7 +63,7 @@ public class ChatbotMain {
 		
 		//Main scanner input
 		scanman = new Scanner(System.in);
-		//pos tagger
+		//POS tagger initialize
 		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
 		
 		Random rand = new Random();
@@ -106,7 +106,6 @@ public class ChatbotMain {
 			
 			tempStringArray = taggedInput.split(" ");
 			
-			
 			//for loop adds the word object to parseinput array from the split string
 			for(String words : tempStringArray) {
 				String[] temp = new String[2];
@@ -115,7 +114,7 @@ public class ChatbotMain {
 			}
 			
 			
-			
+			//Chatbot rules for response
 			
 			if(input.startsWith("My name is")) {
 				personName = input.substring(11,input.length());
