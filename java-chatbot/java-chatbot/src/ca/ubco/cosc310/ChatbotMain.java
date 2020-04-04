@@ -14,7 +14,6 @@ import org.json.simple.parser.JSONParser;
 
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
-//test commit to ben edits
 
 /*
  * Created 2/25/2020
@@ -117,7 +116,10 @@ public class ChatbotMain {
 			//Chatbot rules for response
 			
 			if(input.startsWith("My name is")) {
-				personName = input.substring(11,input.length());
+				if( parseInput.get(3).getIdentifier().equalsIgnoreCase("NNP")) {
+					personName = parseInput.get(3).getContent();
+				}
+				//personName = input.substring(11,input.length());
 				input = input.substring(0, 10);
 			}else if(input.equalsIgnoreCase("what is your name?")) {
 				dogName = prompt("I don't have one! Please give me one:");
