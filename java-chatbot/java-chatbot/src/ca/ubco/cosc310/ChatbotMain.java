@@ -12,6 +12,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+
 //test commit to ben edits
 
 /*
@@ -39,6 +41,11 @@ public class ChatbotMain {
 	 * Responses are used when the user inputs something like bye/goodbye
 	 */
 	public static ArrayList<String> goodbyes;
+	
+	/*
+	 * 
+	 */
+	public static ArrayList<Word> parseInput;
 
 	/*
 	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
@@ -50,11 +57,14 @@ public class ChatbotMain {
 	
 	public static String dogName = "";
 	public static String personName = "";
+	private static String taggedInput = "";
 
 	public static void main(String[] args) {
 		
 		//Main scanner input
 		scanman = new Scanner(System.in);
+		//pos tagger
+		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
 		
 		Random rand = new Random();
 
@@ -62,6 +72,7 @@ public class ChatbotMain {
 		actions = new ArrayList<String>();
 		goodbyes = new ArrayList<String>();
 		inputs = new LinkedHashMap<String, String>();
+		parseInput = new ArrayList<Word>();
 
 		// Load arrays from files
 		greetings = loadJson("greetings", "Greetings");
@@ -82,8 +93,30 @@ public class ChatbotMain {
 			//Text to ask in next print
 			String nextText = "";
 			
+			//temp String array
+			String[] tempStringArray = new String[20];
+			
 			//Hard coded for now but sets dog name and the person name
 			//TODO: Remove special characters
+			
+			//parse input using pos
+			taggedInput = posTag.tagTokenizedString(input);
+			
+			System.out.println(taggedInput);
+			
+			tempStringArray = taggedInput.split(" ");
+			
+			
+			//for loop adds the word object to parseinput array from the split string
+			for(String words : tempStringArray) {
+				String[] temp = new String[2];
+				temp = words.split("_");
+				parseInput.add(new Word(temp[0], temp[1]));	
+			}
+			
+			
+			
+			
 			if(input.startsWith("My name is")) {
 				personName = input.substring(11,input.length());
 				input = input.substring(0, 10);
@@ -120,6 +153,9 @@ public class ChatbotMain {
 			}
 			//Re prompt user with the new text
 			input = prompt(nextText);
+			
+			//empty parseInput to be clear for next input
+			parseInput.clear();
 		}
 		
 		//Get a random goodbye to say
