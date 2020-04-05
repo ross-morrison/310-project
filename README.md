@@ -22,7 +22,7 @@ The project we have created is a chatbot, where the user of the program can inpu
       -type "My name is broken" first, followed by either another input or "My name is Alan"
 
 # Authors
-Eric Shanks
-Brandon Gaucher
-Ben Fitzharris
+Eric Shanks,
+Brandon Gaucher,
+Ben Fitzharris,
 Ross Morrison 
