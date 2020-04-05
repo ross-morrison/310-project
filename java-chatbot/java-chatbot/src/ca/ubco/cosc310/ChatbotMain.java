@@ -86,6 +86,10 @@ public class ChatbotMain {
 					String nextText = "";
 					
 					//clean input
+					if(input == null) {
+						print("Error reading input...");
+						input = "error";
+					}
 					input = cleanInput(input);
 					
 					//If the input is found
@@ -114,9 +118,12 @@ public class ChatbotMain {
 					}
 					//Re prompt other bot with new text
 					input = socket.send(nextText);
+					print("local: " + nextText);
+					print("remote: " + input);
 				}
 			}catch (IOException e) {
 				print("Connection was lost or corrupted.");
+				e.printStackTrace();
 			}
 		}else {
 			//To loop forever until the user says goodbye
