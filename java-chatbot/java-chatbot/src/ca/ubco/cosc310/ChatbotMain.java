@@ -150,7 +150,10 @@ public class ChatbotMain {
 				//Retry input
 				if(parsedInput.get(0).getIdentifier().equalsIgnoreCase("UH")) {
 					nextText = "What's wrong?";
-				}else {
+				}else if(parsedInput.get(parsedInput.size() - 1).getIdentifier().equalsIgnoreCase("$")) {
+					nextText = "I don't like money, but I'll fetch the ball for treats!";
+				}
+				else {
 					nextText = "I didn't understand that";
 					
 				}
@@ -292,7 +295,7 @@ public class ChatbotMain {
 		String[] tempStringArray = new String[20];
 
 		taggedInput = posTag.tagTokenizedString(input);
-		
+		//System.out.println(taggedInput);
 		tempStringArray = taggedInput.split(" ");
 		
 		for(String words : tempStringArray) {
