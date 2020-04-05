@@ -3,5 +3,20 @@ The project we have created is a chatbot, where the user of the program can inpu
 # How to compile
 - Import project into eclipse
 - Add JUnit and json-simple to build path
+- Add Stanford POS tagger to build path from https://nlp.stanford.edu/software/tagger.shtml#Download 3.9.2 english version used
 - Compile using Eclipse Run
 - Use console to talk with the dog
+
+
+# Added Features
+
+-POS Tagging
+      -Implemented for the way of entering the name to determine whether a singular pronoun is used
+      
+      
+      
+      
+# Feature examples
+
+-POS Tagging
+      -type "My name is broken" first, followed by either another input or "My name is Alan"

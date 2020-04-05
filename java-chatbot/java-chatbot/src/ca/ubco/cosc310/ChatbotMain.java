@@ -12,7 +12,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-//test commit
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+
 
 /*
  * Created 2/25/2020
@@ -39,6 +40,11 @@ public class ChatbotMain {
 	 * Responses are used when the user inputs something like bye/goodbye
 	 */
 	public static ArrayList<String> goodbyes;
+	
+	/*
+	 * This is used to store the input and its associated POS tags
+	 */
+	public static ArrayList<Word> parsedInput;
 
 	/*
 	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
@@ -50,11 +56,14 @@ public class ChatbotMain {
 	
 	public static String dogName = "";
 	public static String personName = "";
+	private static String taggedInput = "";
 
 	public static void main(String[] args) {
 		
 		//Main scanner input
 		scanman = new Scanner(System.in);
+		//POS tagger initialize
+		//MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
 		
 		Random rand = new Random();
 
@@ -62,6 +71,7 @@ public class ChatbotMain {
 		actions = new ArrayList<String>();
 		goodbyes = new ArrayList<String>();
 		inputs = new LinkedHashMap<String, String>();
+		parsedInput = new ArrayList<Word>();
 
 		// Load arrays from files
 		greetings = loadJson("greetings", "Greetings");
@@ -82,11 +92,32 @@ public class ChatbotMain {
 			//Text to ask in next print
 			String nextText = "";
 			
+			
 			//Hard coded for now but sets dog name and the person name
 			//TODO: Remove special characters
+			
+			//parse and POS tag input
+			parseInput(input);
+			
+			//Chatbot rules for response
+			
+			
+			//logic for inputting name
 			if(input.startsWith("My name is")) {
-				personName = input.substring(11,input.length());
-				input = input.substring(0, 10);
+				//error handling in case a singular pronoun is not entered
+				while(!NNPCheck(parsedInput.get(3))) {
+					input = prompt("Sorry but I don't think that's a real name, What is your real name? ");
+					parseInput(input);
+					if(!input.startsWith("My name is")) {
+						parsedInput.add(new Word());
+						parsedInput.add(new Word());
+						parsedInput.add(new Word());
+						parsedInput.set(3, parsedInput.get(0) );
+						continue;
+					}
+				}
+				personName = parsedInput.get(3).getContent();
+				input = "My name is ";
 			}else if(input.equalsIgnoreCase("what is your name?")) {
 				dogName = prompt("I don't have one! Please give me one:");
 			}
@@ -115,11 +146,21 @@ public class ChatbotMain {
 				//Chance of a random enounter
 				nextText = random.get(rand.nextInt(random.size()));
 			}else {
+				
 				//Retry input
-				nextText = "I didn't understand that";
+				if(parsedInput.get(0).getIdentifier().equalsIgnoreCase("UH")) {
+					nextText = "What's wrong?";
+				}else {
+					nextText = "I didn't understand that";
+					
+				}
+				
 			}
 			//Re prompt user with the new text
 			input = prompt(nextText);
+			
+			//empty parseInput to be clear for next input
+			parsedInput.clear();
 		}
 		
 		//Get a random goodbye to say
@@ -226,6 +267,40 @@ public class ChatbotMain {
 			}
 		}
 		return actions.get(actionInputs.indexOf(input));
+	}
+	
+	/*
+	 * Method to check if the desired word is a proper noun singular
+	 */
+	public static boolean NNPCheck(Word word) {
+		if(word.getIdentifier().equalsIgnoreCase("NNP"))
+			return true;
+		else {
+			return false;
+		}
+	}
+	
+	/*
+	 * Method parse's input into parseInput as Word objects
+	 */
+	
+	public static void parseInput(String input) {
+		parsedInput.clear();
+		
+		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
+		
+		String[] tempStringArray = new String[20];
+
+		taggedInput = posTag.tagTokenizedString(input);
+		
+		tempStringArray = taggedInput.split(" ");
+		
+		for(String words : tempStringArray) {
+			String[] temp = new String[2];
+			temp = words.split("_");
+			parsedInput.add(new Word(temp[0], temp[1]));	
+		}
+		
 	}
 
 }
