@@ -20,3 +20,9 @@ The project we have created is a chatbot, where the user of the program can inpu
 
 -POS Tagging
       -type "My name is broken" first, followed by either another input or "My name is Alan"
+
+# Authors
+Eric Shanks,
+Brandon Gaucher,
+Ben Fitzharris,
+Ross Morrison 
