@@ -5,9 +5,14 @@ public class Word {
 	private String content;
 	private String identifier;
 	
-	Word(String content, String identifier){
+	public Word(String content, String identifier){
 		this.content = content;
 		this.identifier = identifier;
+	}
+	
+	public Word() {
+		this.content = null;
+		this.identifier = null;
 	}
 
 	public String getContent() {

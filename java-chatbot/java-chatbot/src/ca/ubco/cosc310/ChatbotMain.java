@@ -63,7 +63,7 @@ public class ChatbotMain {
 		//Main scanner input
 		scanman = new Scanner(System.in);
 		//POS tagger initialize
-		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
+		//MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
 		
 		Random rand = new Random();
 
@@ -101,13 +101,23 @@ public class ChatbotMain {
 			
 			//Chatbot rules for response
 			
+			
+			//logic for inputting name
 			if(input.startsWith("My name is")) {
+				//error handling in case a singular pronoun is not entered
 				while(!NNPCheck(parsedInput.get(3))) {
 					input = prompt("Sorry but I don't think that's a real name, What is your real name? ");
+					parseInput(input);
+					if(!input.startsWith("My name is")) {
+						parsedInput.add(new Word());
+						parsedInput.add(new Word());
+						parsedInput.add(new Word());
+						parsedInput.set(3, parsedInput.get(0) );
+						continue;
+					}
 				}
 				personName = parsedInput.get(3).getContent();
-				//personName = input.substring(11,input.length());
-				input = input.substring(0, 10);
+				input = "My name is ";
 			}else if(input.equalsIgnoreCase("what is your name?")) {
 				dogName = prompt("I don't have one! Please give me one:");
 			}
@@ -256,7 +266,6 @@ public class ChatbotMain {
 	 * Method to check if the desired word is a proper noun singular
 	 */
 	public static boolean NNPCheck(Word word) {
-		
 		if(word.getIdentifier().equalsIgnoreCase("NNP"))
 			return true;
 		else {
@@ -265,14 +274,16 @@ public class ChatbotMain {
 	}
 	
 	/*
-	 * Method parse's input into parseInput
+	 * Method parse's input into parseInput as Word objects
 	 */
 	
 	public static void parseInput(String input) {
+		parsedInput.clear();
+		
 		MaxentTagger posTag = new MaxentTagger("english-left3words-distsim.tagger");
 		
 		String[] tempStringArray = new String[20];
-		
+
 		taggedInput = posTag.tagTokenizedString(input);
 		
 		tempStringArray = taggedInput.split(" ");
@@ -282,6 +293,7 @@ public class ChatbotMain {
 			temp = words.split("_");
 			parsedInput.add(new Word(temp[0], temp[1]));	
 		}
+		
 	}
 
 }
