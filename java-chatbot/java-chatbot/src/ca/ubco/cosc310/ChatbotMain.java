@@ -146,8 +146,15 @@ public class ChatbotMain {
 				//Chance of a random enounter
 				nextText = random.get(rand.nextInt(random.size()));
 			}else {
+				
 				//Retry input
-				nextText = "I didn't understand that";
+				if(parsedInput.get(0).getIdentifier().equalsIgnoreCase("UH")) {
+					nextText = "What's wrong?";
+				}else {
+					nextText = "I didn't understand that";
+					
+				}
+				
 			}
 			//Re prompt user with the new text
 			input = prompt(nextText);
