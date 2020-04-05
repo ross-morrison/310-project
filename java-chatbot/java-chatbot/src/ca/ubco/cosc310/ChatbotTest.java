@@ -7,40 +7,43 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ChatbotTest {
 	
-	@Test
-	void testPrint() {
-		ChatbotMain.print("Test");
-		return;
-	}
+	public ChatbotMain chatbot;
+	
+	@BeforeAll
+    void startTests() {
+		chatbot = new ChatbotMain();
+    }
+	
 	
 	@Test
 	void testCleanInput() {
 		String expected = "aaa ${dog}";
-		ChatbotMain.dogName = "doggo";
+		chatbot.dogName = "doggo";
 	
-		String gotten = ChatbotMain.cleanInput("AAA doggo  ");
+		String gotten = chatbot.cleanInput("AAA doggo  ");
 		assertEquals(expected, gotten);
 	}
 	
 	@Test
 	void testGetAction() {
 		String[] testArray = {"Test"};
-		ChatbotMain.actions = new ArrayList<String>(Arrays.asList(testArray));
-		ChatbotMain.inputs = new LinkedHashMap<String, String>();
-		ChatbotMain.inputs.put("test", "actions");
+		chatbot.actions = new ArrayList<String>(Arrays.asList(testArray));
+		chatbot.inputs = new LinkedHashMap<String, String>();
+		chatbot.inputs.put("test", "actions");
 		
-		assertEquals("Test", ChatbotMain.getAction("test"));
+		assertEquals("Test", chatbot.getAction("test"));
 	}
 	
 	@Test
 	void testLoadJSON() {
 		String expected = "tester";
 		
-		ArrayList<String> jsonArray = ChatbotMain.loadJson("test", "test");
+		ArrayList<String> jsonArray = chatbot.loadJson("test", "test");
 		
 		assertEquals(expected, jsonArray.get(0));
 		
@@ -53,7 +56,7 @@ class ChatbotTest {
 		expected.put("testeraction", "Actions");
 		expected.put("testergoodbye", "Goodbyes");
 		
-		HashMap<String, String> gotten = ChatbotMain.loadInputs("test");
+		HashMap<String, String> gotten = chatbot.loadInputs("test");
 		
 		assertEquals(expected, gotten);
 	}
