@@ -23,40 +23,49 @@ public class ChatbotMain {
 	/*
 	 * Responses are used when the user inputs something like hey/hello
 	 */
-	public static ArrayList<String> greetings;
+	public ArrayList<String> greetings;
 
 	/*
 	 * Random events that can happen ie. chase squirrel
 	 */
-	public static ArrayList<String> random;
+	public ArrayList<String> random;
 
 	/*
 	 * Responses to actions from user. ie. *throws ball*
 	 */
-	public static ArrayList<String> actions;
+	public ArrayList<String> actions;
 
 	/*
 	 * Responses are used when the user inputs something like bye/goodbye
 	 */
-	public static ArrayList<String> goodbyes;
+	public ArrayList<String> goodbyes;
 
 	/*
 	 * Each input text is defined to a certain grouping, ie. *throw ball* is linked
 	 * to the actions list for *runs and grabs ball*
 	 */
-	public static HashMap<String, String> inputs;
+	public HashMap<String, String> inputs;
 	
-	public static Scanner scanman;
+	public String dogName = "";
+	public String personName = "";
 	
-	public static String dogName = "";
-	public static String personName = "";
+	public static boolean running = true;
+	public static Random rand;
+	
+	public String input;
+	
+	public ChatbotGUI gui;
 
 	public static void main(String[] args) {
-		
+		new ChatbotMain();
+	}
+	
+	public ChatbotMain() {
+
 		//Main scanner input
-		scanman = new Scanner(System.in);
+		rand = new Random();
 		
-		Random rand = new Random();
+		gui = new ChatbotGUI(this);
 
 		random = new ArrayList<String>();
 		actions = new ArrayList<String>();
@@ -70,70 +79,92 @@ public class ChatbotMain {
 		goodbyes = loadJson("goodbyes", "Goodbyes");
 		inputs = loadInputs("inputs");
 
-		
 
 		//To loop forever until the user says goodbye
-		boolean running = true;
 		
 		//Initial prompt to start
-		String input = prompt("Try saying hello, or say what your name is!");
-
-		while(running) {
-			//Text to ask in next print
-			String nextText = "";
-			
-			//Hard coded for now but sets dog name and the person name
-			//TODO: Remove special characters
-			if(input.startsWith("My name is")) {
-				personName = input.substring(11,input.length());
-				input = input.substring(0, 10);
-			}else if(input.equalsIgnoreCase("what is your name?")) {
-				dogName = prompt("I don't have one! Please give me one:");
-			}
-			
-			//Lowercase and trim input
-			input = cleanInput(input);
-			
-			//If the input is found
-			if(inputs.get(input) != null) {
+		prompt("Try saying hello, or say what your name is!");
+		String previous = "";
+		boolean setDogNameAsNext = false;
+		synchronized (this) {
+			while(running) {
+				//Text to ask in next print
+				String nextText = "";
 				
-				//Get the group of the input
-				String cat = inputs.get(input);
-				
-				if(cat == "Greetings") {
-					//Get a random greeting
-					nextText = greetings.get(rand.nextInt(greetings.size()));
-				}else if(cat == "Actions") {
-					//Get the matching action
-					nextText = getAction(input);
-				}else if(cat == "Goodbyes") {
-					//Stop the loop
-					running = false;
-					break;
+				//Hard coded for now but sets dog name and the person name
+				//TODO: Remove special characters
+				while(input == null || input == previous) {
+					try {
+						System.out.println("waiting");
+						this.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			}else if(rand.nextInt(10) > 5) {
-				//Chance of a random enounter
-				nextText = random.get(rand.nextInt(random.size()));
-			}else {
-				//Retry input
-				nextText = "I didn't understand that";
+				
+				if(setDogNameAsNext) {
+					dogName = input;
+					System.out.println("set dog name: " + dogName);
+					
+					setDogNameAsNext = false;
+					input = "what is your name?";
+					continue;
+				}
+				
+				if(input.startsWith("My name is")) {
+					personName = input.substring(11,input.length());
+					input = input.substring(0, 10);
+				}else if(input.equalsIgnoreCase("what is your name?") && dogName == "") {
+					prompt("I don't have one! Please give me one:");
+					setDogNameAsNext = true;
+					input = null;
+					continue;
+				}
+				
+				//Lowercase and trim input
+				input = cleanInput(input);
+				
+				//If the input is found
+				if(inputs.get(input) != null) {
+					
+					//Get the group of the input
+					String cat = inputs.get(input);
+					
+					if(cat == "Greetings") {
+						//Get a random greeting 
+						nextText = greetings.get(rand.nextInt(greetings.size()));
+					}else if(cat == "Actions") {
+						//Get the matching action
+						nextText = getAction(input);
+					}else if(cat == "Goodbyes") {
+						//Stop the loop
+						running = false;
+						break;
+					}
+				}else if(rand.nextInt(10) > 5) {
+					//Chance of a random enounter
+					nextText = random.get(rand.nextInt(random.size()));
+				}else {
+					//Retry input
+					nextText = "I didn't understand that";
+				}
+				//Re prompt user with the new text
+				previous = input;
+				prompt(nextText);
 			}
-			//Re prompt user with the new text
-			input = prompt(nextText);
 		}
 		
-		//Get a random goodbye to say
-		print(goodbyes.get(rand.nextInt(goodbyes.size())));
 		
-		//Close the scanner
-		scanman.close();
+		//Get a random goodbye to say
+		gui.addBotText(goodbyes.get(rand.nextInt(goodbyes.size())));
+		
 	}
-
+	
 	// https://crunchify.com/how-to-read-json-object-from-file-in-java/
 	/*
 	 * Loads the specified JSON file into a temporary array and returns it.
 	 */
-	public static ArrayList<String> loadJson(String filename, String section) {
+	public ArrayList<String> loadJson(String filename, String section) {
 		
 		ArrayList<String> tempArray = new ArrayList<String>();
 		
@@ -163,7 +194,7 @@ public class ChatbotMain {
 	/*
 	 * Loads the 3 input groups into the HashMap
 	 */
-	public static HashMap<String, String> loadInputs(String filename) {
+	public HashMap<String, String> loadInputs(String filename) {
 		
 		HashMap<String,String> tempMap = new LinkedHashMap<String, String>();
 		
@@ -191,7 +222,7 @@ public class ChatbotMain {
 	/*
 	 * Trims and lowercases specified string, also replaces the dogname with ${dog} for calling out the dogs name
 	 */
-	public static String cleanInput(String text) {
+	public String cleanInput(String text) {
 		if(dogName != "") {
 			text = text.replace(dogName, "${dog}");
 		}
@@ -201,24 +232,19 @@ public class ChatbotMain {
 	/*
 	 * Prints the specified text then waits for input
 	 */
-	public static String prompt(String text) {
-		print(text);
-		return scanman.nextLine();
-	}
-	
-	/*
-	 * Formats the specified text with the dog name or person name before printing
-	 */
-	public static void print(String text) {
+	public String prompt(String text) {
 		if(personName != "") text = text.replace("${person}", personName);
 		if(dogName != "") text = text.replace("${dog}", dogName);
-		if(text != "") System.out.println(text);
+		gui.addBotText(text);
+		System.out.println("prompt");
+		return gui.nextMessage;
 	}
 	
+
 	/*
 	 * Loops through the actions input list and finds the associated action from actions array
 	 */
-	public static String getAction(String input) {
+	public String getAction(String input) {
 		ArrayList<String> actionInputs = new ArrayList<String>();
 		for (Entry<String, String> entry : inputs.entrySet()) {
 			if (entry.getValue().equalsIgnoreCase("actions")) {
