@@ -25,7 +25,8 @@ The project we have created is a chatbot, where the user of the program can inpu
      
 -Ability to talk to other chatbots
 
-     -Ability to talk to another agent: This feature allows our agent to talk to another agent via sockets. Instead of the user conversing with the dogbot, the dogbot can also converse with an agent from another cosc 310 team.
+     -Ability to talk to another agent: This feature allows our agent to talk to another agent via sockets. Instead of the user conversing
+     with the dogbot, the dogbot can also converse with an agent from another cosc 310 team.
 
       
       
