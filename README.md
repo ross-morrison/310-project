@@ -13,6 +13,27 @@ The project we have created is a chatbot, where the user of the program can inpu
 -POS Tagging
       -Implemented for the way of entering the name to determine whether a singular pronoun is used
 -GUI
+      -The GUI feature did not necessarily improve our agent’s conversational skills, but it added an aesthetically pleasant medium for the user to interact with, simplifying the input and the output of the system.  
+      
+-SPELLCHECKER
+
+     - The spellchecker feature is working everytime a user inputs a diolog into the gui. The spellchecker takes the user's input and 
+     attempts to find the closest matching word from a dictionary. It implements Levenshtein distance to check how simular (how many different letters between) two words to attempt to pick the closest word to what the user typed. There if the input is too foriegn to any words in the dictionary (say 3 letters different from any word in the dictionary) the spellchecker will not change the word. This affects our conversation by reducing the amount of misscommunication between the user and chatbot.
+     
+-Ability to talk to other chatbots
+
+     -Ability to talk to another agent: This feature allows our agent to talk to another agent via sockets. Instead of the user conversing with the dogbot, the dogbot can also converse with an agent from another cosc 310 team.
+
+      
+      
+      
+      
+# Feature examples
+
+-POS Tagging
+      -type "My name is broken" first, followed by either another input or "My name is Alan"
+      
+-GUI
       -Will see visual feature upon running
       
 -SPELLCHECKER
@@ -26,13 +47,6 @@ The project we have created is a chatbot, where the user of the program can inpu
       -OtherBot: "What do you need potatoes for?
       -OurBot: "I did not understand that"
       
-      
-      
-      
-# Feature examples
-
--POS Tagging
-      -type "My name is broken" first, followed by either another input or "My name is Alan"
 
 # Authors
 Eric Shanks,
