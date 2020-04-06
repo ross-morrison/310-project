@@ -1,6 +1,7 @@
 package ca.ubco.cosc310;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -104,103 +105,160 @@ public class ChatbotMain {
 		
 		boolean setDogNameAsNext = false;
 		boolean realNameCheck = false;
-		
-		synchronized (this) {
-			while(running) {
-				//Text to ask in next print
-				String nextText = "";
+
+
+		boolean networked = false;
+		if(networked) {
+			String ip = "";
+			int port = 1234;
+			try {
+				ChatbotSocket socket = new ChatbotSocket(ip, port);
+				boolean running = true;
 				
-				//Hard coded for now but sets dog name and the person name
-				//TODO: Remove special characters
-				while(input == null || input == previous) {
-					try {
-						System.out.println("waiting");
-						this.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+				//initial input from other bot
+				String input = socket.send("Try saying hello, or say what your name is!");
 				
-				
-				
-				if(setDogNameAsNext) {
-					dogName = input;
-					System.out.println("set dog name: " + dogName);
+				while(running) {
+					String nextText = "";
 					
-					setDogNameAsNext = false;
-					input = "what is your name";
-					continue;
+					//clean input
+					if(input == null) {
+						System.out.println("Error reading input...");
+						input = "error";
+					}
+					input = cleanInput(input);
+					
+					//If the input is found
+					if(inputs.get(input) != null) {
+						
+						//Get the group of the input
+						String cat = inputs.get(input);
+						
+						if(cat == "Greetings") {
+							//Get a random greeting
+							nextText = greetings.get(rand.nextInt(greetings.size()));
+						}else if(cat == "Actions") {
+							//Get the matching action
+							nextText = getAction(input);
+						}else if(cat == "Goodbyes") {
+							//Stop the loop
+							running = false;
+							break;
+						}
+					}else if(rand.nextInt(10) > 5) {
+						//Chance of a random enounter
+						nextText = random.get(rand.nextInt(random.size()));
+					}else {
+						//Retry input
+						nextText = "I didn't understand that";
+					}
+					//Re prompt other bot with new text
+					input = socket.send(nextText);
+					System.out.println("local: " + nextText);
+					System.out.println("remote: " + input);
 				}
-				
-				if(realNameCheck) {
-					parseInput(input);
-					if(!input.startsWith("my name is")) {
-						if(NNPCheck(parsedInput.get(0))) {
-							personName = parsedInput.get(0).getContent();
-							realNameCheck = false;
-							input = "my name is";
+			}catch (IOException e) {
+				System.out.println("Connection was lost or corrupted.");
+				e.printStackTrace();
+			}
+		}else {
+			synchronized (this) {
+				while(running) {
+					//Text to ask in next print
+					String nextText = "";
+					
+					//Hard coded for now but sets dog name and the person name
+					//TODO: Remove special characters
+					while(input == null || input == previous) {
+						try {
+							System.out.println("waiting");
+							this.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					
+					
+					if(setDogNameAsNext) {
+						dogName = input;
+						System.out.println("set dog name: " + dogName);
+						
+						setDogNameAsNext = false;
+						input = "what is your name";
+						continue;
+					}
+					
+					if(realNameCheck) {
+						parseInput(input);
+						if(!input.startsWith("my name is")) {
+							if(NNPCheck(parsedInput.get(0))) {
+								personName = parsedInput.get(0).getContent();
+								realNameCheck = false;
+								input = "my name is";
+								continue;
+							}
+							prompt("Sorry but I don't think that's a real name, What is your real name? ");
+							input = null;
+							realNameCheck = true;
 							continue;
 						}
-						prompt("Sorry but I don't think that's a real name, What is your real name? ");
+					}
+					
+					if(input.startsWith("my name is") && personName == "") {
+						parseInput(input);
+						if(!NNPCheck(parsedInput.get(3))) {
+							System.out.println(parsedInput.get(3).getIdentifier());
+							prompt("Sorry but I don't think that's a real name, What is your real name? ");
+							input = null;
+							realNameCheck = true;
+							continue;
+						}
+						personName = input.substring(11,input.length());
+						input = input.substring(0, 10);
+					}else if(input.startsWith("what is your name") && dogName == "") {
+						prompt("I don't have one! Please give me one:");
+						setDogNameAsNext = true;
 						input = null;
-						realNameCheck = true;
 						continue;
 					}
-				}
-				
-				if(input.startsWith("my name is") && personName == "") {
+					
+					
 					parseInput(input);
-					if(!NNPCheck(parsedInput.get(3))) {
-						System.out.println(parsedInput.get(3).getIdentifier());
-						prompt("Sorry but I don't think that's a real name, What is your real name? ");
-						input = null;
-						realNameCheck = true;
-						continue;
-					}
-					personName = input.substring(11,input.length());
-					input = input.substring(0, 10);
-				}else if(input.startsWith("what is your name") && dogName == "") {
-					prompt("I don't have one! Please give me one:");
-					setDogNameAsNext = true;
-					input = null;
-					continue;
-				}
-				
-				
-				parseInput(input);
-				input = cleanInput(input);
-				
-				System.out.println("Input before: " + input);
-				input = spellchecker.spellcheck(input);
-				System.out.println("Input after: " + input);
-				
-				//If the input is found
-				if(inputs.get(input) != null) {
+					input = cleanInput(input);
 					
-					//Get the group of the input
-					String cat = inputs.get(input);
+					System.out.println("Input before: " + input);
+					input = spellchecker.spellcheck(input);
+					System.out.println("Input after: " + input);
 					
-					if(cat == "Greetings") {
-						//Get a random greeting 
-						nextText = greetings.get(rand.nextInt(greetings.size()));
-					}else if(cat == "Actions") {
-						//Get the matching action
-						nextText = getAction(input);
-					}else if(cat == "Goodbyes") {
-						//Stop the loop
-						running = false;
-						break;
+					//If the input is found
+					if(inputs.get(input) != null) {
+						
+						//Get the group of the input
+						String cat = inputs.get(input);
+						
+						if(cat == "Greetings") {
+							//Get a random greeting 
+							nextText = greetings.get(rand.nextInt(greetings.size()));
+						}else if(cat == "Actions") {
+							//Get the matching action
+							nextText = getAction(input);
+						}else if(cat == "Goodbyes") {
+							//Stop the loop
+							running = false;
+							break;
+						}
+					}else if(rand.nextInt(10) > 5) {
+						//Chance of a random enounter
+						nextText = random.get(rand.nextInt(random.size()));
+					}else {
+						//Retry input
+						nextText = "I didn't understand that";
 					}
-				}else if(rand.nextInt(10) > 5) {
-					//Chance of a random enounter
-					nextText = random.get(rand.nextInt(random.size()));
-				}else {
-					//Retry input
-					nextText = "I didn't understand that";
+					//Re prompt user with the new text
+					previous = input;
+					prompt(nextText);
 				}
-				//Re prompt user with the new text
-				previous = input;
-				prompt(nextText);
 			}
 		}
 		
@@ -208,6 +266,20 @@ public class ChatbotMain {
 		//Get a random goodbye to say
 		gui.addBotText(goodbyes.get(rand.nextInt(goodbyes.size())));
 		
+	}
+	
+	/*
+	 * Test case constructor
+	 */
+	public ChatbotMain(boolean test) {
+		//Main scanner input
+		rand = new Random();
+		spellchecker = new Spellcheck("wordList.txt");
+		random = new ArrayList<String>();
+		actions = new ArrayList<String>();
+		goodbyes = new ArrayList<String>();
+		inputs = new LinkedHashMap<String, String>();
+		parsedInput = new ArrayList<Word>();
 	}
 	
 	// https://crunchify.com/how-to-read-json-object-from-file-in-java/
