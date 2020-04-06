@@ -37,6 +37,7 @@ public class ChatbotGUI extends JFrame implements KeyListener {
 		// conversation.setSize(540, 450);
 		conversation.setLocation(20, 20);
 		conversation.setEditable(false);
+		conversation.setLineWrap(true);
 
 		// create/set up userInput textArea
 		userInput = new JTextArea();
@@ -75,7 +76,6 @@ public class ChatbotGUI extends JFrame implements KeyListener {
 			// reset input
 			userInput.setText("");
 			addUserText(input);
-			System.out.println("Set input " + input);
 			synchronized (chatbot) {
 				chatbot.input = input;
 				chatbot.notify();
@@ -92,7 +92,6 @@ public class ChatbotGUI extends JFrame implements KeyListener {
 	}
 
 	public void addText(String text) {
-		System.out.println(conversation.getText());
 		conversation.setText(conversation.getText() + text + "\n");
 	}
 	
