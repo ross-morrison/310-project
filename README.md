@@ -12,6 +12,19 @@ The project we have created is a chatbot, where the user of the program can inpu
 
 -POS Tagging
       -Implemented for the way of entering the name to determine whether a singular pronoun is used
+-GUI
+      -Will see visual feature upon running
+      
+-SPELLCHECKER
+
+      -User inputs "I am very good at spelllng" the spellchecker will change the input automatically to ""I am very good at spelling"
+      
+-Ability to talk to other chatbots
+
+      -OtherBot: "I like all the potatoes!"
+      -OurBot:" Oh! A ball! Oh, boy! Oh, boy! A ball!"
+      -OtherBot: "What do you need potatoes for?
+      -OurBot: "I did not understand that"
       
       
       
