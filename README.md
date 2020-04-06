@@ -18,7 +18,10 @@ The project we have created is a chatbot, where the user of the program can inpu
 -SPELLCHECKER
 
      - The spellchecker feature is working everytime a user inputs a diolog into the gui. The spellchecker takes the user's input and 
-     attempts to find the closest matching word from a dictionary. It implements Levenshtein distance to check how simular (how many different letters between) two words to attempt to pick the closest word to what the user typed. There if the input is too foriegn to any words in the dictionary (say 3 letters different from any word in the dictionary) the spellchecker will not change the word. This affects our conversation by reducing the amount of misscommunication between the user and chatbot.
+     attempts to find the closest matching word from a dictionary. It implements Levenshtein distance to check how simular (how many
+     different letters between) two words to attempt to pick the closest word to what the user typed. There if the input is too foriegn to
+     any words in the dictionary (say 3 letters different from any word in the dictionary) the spellchecker will not change the word. This
+     affects our conversation by reducing the amount of misscommunication between the user and chatbot.
      
 -Ability to talk to other chatbots
 
